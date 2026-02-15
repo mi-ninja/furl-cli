@@ -45,9 +45,9 @@ async fn main() {
 
     // TODO: add extensive url pattern matcher
     let re = Regex::new(r"https?://[^\s/$.?#].[^\s]*").unwrap();
-    if let Some(_) = re.captures(&args.url) {
+    if re.captures(&args.url).is_some() {
         let mut downloader = Downloader::new(&args.url);
-        if let Ok(_) = downloader.download(&args.out, Some(threads)).await {
+        if downloader.download(&args.out, Some(threads)).await.is_ok() {
             println!("Download Complete!")
         }
         return;
