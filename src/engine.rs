@@ -81,7 +81,7 @@ impl HeaderUtils for HeaderMap {
                 return Ok(filename.trim_matches('"').to_string());
             }
         }
-        return Err(Box::from("Unable to extract filename".to_owned()));
+        Err(Box::from("Unable to extract filename".to_owned()))
         // TODO: guess filename from content type
     }
 
@@ -94,7 +94,7 @@ impl HeaderUtils for HeaderMap {
             .get(CONTENT_RANGE)
             .ok_or_else(|| Box::<dyn Error + Send + Sync>::from("Content_range not found"))?;
         let content_range =
-            cr.to_str()?.split("/").into_iter().last().ok_or_else(|| {
+            cr.to_str()?.split("/").last().ok_or_else(|| {
                 Box::<dyn Error + Send + Sync>::from("Invalid Content_range_format")
             })?;
         Ok(content_range.parse()?)
@@ -106,14 +106,14 @@ impl HeaderUtils for HeaderMap {
 /// For example: if content disposition is not provided, but there is a valid
 /// filename in the request url
 pub fn extract_filename_from_url(url: &str) -> Option<String> {
-    if let Ok(parsed_url) = Url::parse(&url) {
-        if let Some(segment) = parsed_url.path_segments().and_then(|s| s.last()) {
-            if !segment.is_empty() {
-                return Some(segment.to_string());
-            }
-        }
+    if let Ok(parsed_url) = Url::parse(url)
+        && let Some(segment) = parsed_url.path_segments().and_then(|mut s| s.next_back())
+        && !segment.is_empty()
+    {
+        return Some(segment.to_string());
     }
-    return None;
+
+    None
 }
 
 impl Downloader {
@@ -360,7 +360,7 @@ impl Downloader {
             let file_clone = Arc::clone(&file);
             let bar = ProgressBar::new_spinner();
             bar.enable_steady_tick(Duration::from_millis(100));
-            println!("");
+            println!("\n");
             bar.set_style(
                 ProgressStyle::with_template(&format!(
                     "{{spinner:.cyan}} {:?} ({{binary_bytes}} downloaded)",
