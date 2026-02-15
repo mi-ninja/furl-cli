@@ -377,3 +377,66 @@ impl Downloader {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use reqwest::header::HeaderMap;
+    use tokio::runtime::Runtime;
+
+    #[test]
+    fn test_extract_filename_from_url() {
+        let url = "https://example.com/path/to/file.txt";
+        assert_eq!(extract_filename_from_url(url), Some("file.txt".to_string()));
+        let url2 = "https://example.com/path/to/";
+        assert_eq!(extract_filename_from_url(url2), None);
+    }
+
+    #[test]
+    fn test_header_extract_filename() {
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            reqwest::header::CONTENT_DISPOSITION,
+            "attachment; filename=\"myfile.bin\"".parse().unwrap(),
+        );
+        let name = headers.extract_filename().unwrap();
+        assert_eq!(name, "myfile.bin");
+    }
+
+    #[test]
+    fn test_header_extract_file_size() {
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            reqwest::header::CONTENT_RANGE,
+            "bytes 0-0/12345".parse().unwrap(),
+        );
+        let size = headers.extract_file_size().unwrap();
+        assert_eq!(size, 12345u64);
+    }
+
+    #[test]
+    fn test_downloader_new_and_defaults() {
+        let d = Downloader::new("https://example.com/file");
+        assert_eq!(d.url, "https://example.com/file");
+        assert!(d.filename.is_none());
+        assert!(d.file_size.is_none());
+    }
+
+    // Placeholder async test for download-related behavior; does not perform network IO.
+    #[test]
+    fn test_download_placeholder() {
+        // Create a runtime to run async parts if needed.
+        let rt = Runtime::new().unwrap();
+        rt.block_on(async {
+            let mut downloader = Downloader::new("https://example.com/file");
+            // Set internal fields to avoid real network operations in this placeholder.
+            downloader.headers = HeaderMap::new();
+            downloader.filename = Some("tmp_download.bin".to_string());
+            downloader.file_size = Some(0);
+
+            // Ensure setters/readers behave as expected in a minimal scenario.
+            assert_eq!(downloader.filename.as_deref(), Some("tmp_download.bin"));
+            assert_eq!(downloader.file_size, Some(0));
+        });
+    }
+}
