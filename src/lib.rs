@@ -13,14 +13,16 @@
 //!
 //! or check [tokio](https://crates.io/crates/tokio) package for more detailed implementation.
 //!
-//! ```
+//! ```rust
 //! use furl_core::Downloader;
 //!
-//! async fn my_function() {
-//!     let mut downloader = Downloader::new("https://example.com/files/file_1.txt".to_owned());
-//!     downloader.download(&args.dest).await?;
+//! #[tokio::main]
+//! async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+//!     let mut downloader = Downloader::new("https://example.com/files/file_1.txt");
+//!     // download into the tmp directory using default thread count
+//!     downloader.download(".", None).await?;
+//!     Ok(())
 //! }
-//!
 //! ```
 pub mod engine;
 
