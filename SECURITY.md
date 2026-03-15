@@ -2,8 +2,9 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Security fixes are provided for the release lines listed below. For this
+repository, that means the currently maintained `furl-cli` releases published
+from this codebase and their corresponding GitHub release artifacts.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -13,8 +14,22 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+If you discover a security vulnerability in `furl-cli` or `furl_core`, do not
+open a public issue or pull request.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Please use GitHub's private vulnerability reporting for this repository. If the
+private reporting option is not available in your view, contact the maintainer
+privately through the repository owner account on GitHub and include enough
+detail to reproduce and assess the issue.
+
+When reporting a vulnerability, include:
+
+- The affected version and platform
+- Clear reproduction steps or a proof of concept
+- The expected impact and any known limitations
+- Possible mitigations or fixes, if you have them
+
+You should expect an initial acknowledgement within 7 days. After triage, the
+maintainer will confirm whether the report is accepted, may request additional
+details, and will try to coordinate a fix and release before public disclosure
+when possible.
