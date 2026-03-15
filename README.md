@@ -1,5 +1,8 @@
 # fURL (`furl-cli`)
 
+[![CI](https://github.com/ghimiresdp/furl-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/ghimiresdp/furl-cli/actions/workflows/ci.yml)
+[![Release](https://github.com/ghimiresdp/furl-cli/actions/workflows/release.yml/badge.svg)](https://github.com/ghimiresdp/furl-cli/actions/workflows/release.yml)
+
 A fast, multithreaded CLI downloader built in Rust.
 
 furl is a high-performance command-line tool designed to download files faster
