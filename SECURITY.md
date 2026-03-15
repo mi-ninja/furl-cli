@@ -2,15 +2,14 @@
 
 ## Supported Versions
 
-Security fixes are provided for the release lines listed below. For this
-repository, that means the currently maintained `furl-cli` releases published
-from this codebase and their corresponding GitHub release artifacts.
+As `furl-cli` is currently in active development and has not yet reached a
+stable `1.0` release, only the **latest published version** receives security
+fixes. Older release lines are not maintained.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 6.x     | :white_check_mark: |
-| 5.x     | :white_check_mark: |
-| < 5.x   | :x:                |
+| Version  | Supported          |
+| -------- | ------------------ |
+| 0.6.x    | :white_check_mark: |
+| < 0.6.x  | :x:                |
 
 ## Reporting a Vulnerability
 
