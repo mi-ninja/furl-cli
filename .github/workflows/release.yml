@@ -1,0 +1,70 @@
+name: Build and attach release artifact
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: Build binary
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-x86_64
+          - os: macos-latest
+            platform: macos-x86_64
+          - os: windows-latest
+            platform: windows-x86_64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Build (release)
+        run: cargo build --release --locked
+
+      - name: Package binary (unix)
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -p artifacts
+          cp target/release/furl artifacts/
+          tar -czf artifacts/furl-${{ github.ref_name }}-${{ matrix.platform }}.tar.gz -C artifacts furl
+
+      - name: Package binary (windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force artifacts
+          Copy-Item -Path target\release\furl.exe -Destination artifacts\
+          Compress-Archive -Path artifacts\furl.exe -DestinationPath artifacts\furl-${{ github.ref_name }}-${{ matrix.platform }}.zip
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: furl-cli-${{ matrix.platform }}
+          path: artifacts/*
+
+  publish_release_asset:
+    name: Attach artifact to GitHub release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./downloaded
+
+      - name: Create or update release and upload assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: downloaded/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
