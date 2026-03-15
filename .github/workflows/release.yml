@@ -14,12 +14,16 @@ jobs:
         include:
           - os: ubuntu-latest
             platform: linux-x86_64
-          - os: macos-13
+            cargo_target: x86_64-unknown-linux-gnu
+          - os: macos-14
             platform: macos-x86_64
+            cargo_target: x86_64-apple-darwin
           - os: macos-14
             platform: macos-aarch64
+            cargo_target: aarch64-apple-darwin
           - os: windows-latest
             platform: windows-x86_64
+            cargo_target: x86_64-pc-windows-msvc
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,16 +32,17 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          target: ${{ matrix.cargo_target }}
           override: true
 
       - name: Build (release)
-        run: cargo build --release --locked
+        run: cargo build --release --locked --target ${{ matrix.cargo_target }}
 
       - name: Package binary (unix)
         if: runner.os != 'Windows'
         run: |
           mkdir -p artifacts
-          cp target/release/furl artifacts/
+          cp target/${{ matrix.cargo_target }}/release/furl artifacts/
           tar -czf artifacts/furl-${{ github.ref_name }}-${{ matrix.platform }}.tar.gz -C artifacts furl
 
       - name: Package binary (windows)
@@ -45,7 +50,7 @@ jobs:
         shell: powershell
         run: |
           New-Item -ItemType Directory -Force artifacts
-          Copy-Item -Path target\release\furl.exe -Destination artifacts\
+          Copy-Item -Path target\${{ matrix.cargo_target }}\release\furl.exe -Destination artifacts\
           Compress-Archive -Path artifacts\furl.exe -DestinationPath artifacts\furl-${{ github.ref_name }}-${{ matrix.platform }}.zip
 
       - name: Upload build artifact
