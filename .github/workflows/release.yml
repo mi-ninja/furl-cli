@@ -50,7 +50,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: furl-cli-${{ matrix.platform }}
-          path: artifacts/*
+          path: |
+            artifacts/*.tar.gz
+            artifacts/*.zip
 
   publish_release_asset:
     name: Attach artifact to GitHub release
