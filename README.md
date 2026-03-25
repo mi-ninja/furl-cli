@@ -23,17 +23,27 @@ the simplicity of cURL and the robustness of wget.
 
 ## Installation
 
-### From Crates.io (Recommended)
+You can install `furl` using Winget, Cargo, or by building it from source.
 
-```bash
+### Windows (Recommended: Winget)
+
+For Windows users, Winget is the recommended installation method.
+
+```shell
+winget install ghimiresdp.furl
+```
+
+### Crates.io
+
+```shell
 cargo install furl-cli
 ```
 
 ### From Source
 
-```bash
+```shell
 git clone https://github.com/ghimiresdp/furl-cli.git
-cd furl
+cd furl-cli
 cargo build --release
 ```
 
@@ -104,6 +114,11 @@ async fn main(){
 - [x] Basic CLI argument parsing (clap)
 - [x] Real-time progress bars
 - [x] Smart Threading (Completely ignore threading for files smaller than 1 MB).
+- [x] Package manager support (Windows: Winget)
+- [ ] Package manager support (Linux: APT)
+- [ ] Package manager support (Linux: Flatpak)
+- [ ] Package manager support (Linux: Snap)
+- [ ] Package manager support (macOS: Homebrew)
 - [ ] Resume interrupted downloads (Checkpoints)
 - [ ] Support for Proxy and Basic Auth
 - [ ] Config file support (furl.toml)
