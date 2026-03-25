@@ -28,6 +28,7 @@ You can install `furl` using Winget, Cargo, or by building it from source.
 ### Windows (Recommended: Winget)
 
 For Windows users, Winget is the recommended installation method.
+Requirement: Winget must be available on your system (included by default on modern Windows 10/11 setups).
 
 ```shell
 winget install ghimiresdp.furl
@@ -35,11 +36,19 @@ winget install ghimiresdp.furl
 
 ### Crates.io
 
+Use this method on any platform where Rust is installed.
+Requirement: Rust toolchain and Cargo must be installed.
+Install Rust from the official guide: <https://www.rust-lang.org/tools/install>
+
 ```shell
 cargo install furl-cli
 ```
 
 ### From Source
+
+Use this method if you want to build from the latest source code or contribute changes.
+Requirement: Git, Rust toolchain, and Cargo must be installed.
+Install Rust from the official guide: <https://www.rust-lang.org/tools/install>
 
 ```shell
 git clone https://github.com/ghimiresdp/furl-cli.git
