@@ -58,7 +58,9 @@ cargo build --release
 
 ### Pre-built Binaries
 
-If `furl` is not yet available in your package manager, you can download pre-built binaries from the [Releases](https://github.com/ghimiresdp/furl-cli/releases) section.
+If `furl` is not yet available in your package manager, you can download pre-built binaries from the **Assets** section of the [latest release](https://github.com/ghimiresdp/furl-cli/releases/latest).
+
+If you need an older version, browse all published releases in the [Releases](https://github.com/ghimiresdp/furl-cli/releases) section and check the **Assets** section for that release.
 
 ## 🛠 Usage
 
