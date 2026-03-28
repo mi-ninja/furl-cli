@@ -23,12 +23,12 @@ the simplicity of cURL and the robustness of wget.
 
 ## Installation
 
-You can install `furl` using Winget, Cargo, or by building it from source.
+You can install `furl` using WinGet, Cargo, or by building it from source.
 
-### Windows (Recommended: Winget)
+### Windows (Recommended: WinGet)
 
-For Windows users, Winget is the recommended installation method.
-Requirement: Winget must be available on your system (included by default on modern Windows 10/11 setups).
+For Windows users, WinGet is the recommended installation method.
+Requirement: WinGet must be available on your system (included by default on modern Windows 10/11 setups).
 
 ```shell
 winget install ghimiresdp.furl
@@ -55,6 +55,10 @@ git clone https://github.com/ghimiresdp/furl-cli.git
 cd furl-cli
 cargo build --release
 ```
+
+### Pre-built Binaries
+
+If `furl` is not yet available in your package manager, you can download pre-built binaries from the [Releases](https://github.com/ghimiresdp/furl-cli/releases) section.
 
 ## 🛠 Usage
 
@@ -123,7 +127,7 @@ async fn main(){
 - [x] Basic CLI argument parsing (clap)
 - [x] Real-time progress bars
 - [x] Smart Threading (Completely ignore threading for files smaller than 1 MB).
-- [x] Package manager support (Windows: Winget)
+- [x] Package manager support (Windows: WinGet)
 - [ ] Package manager support (Linux: APT)
 - [ ] Package manager support (Linux: Flatpak)
 - [ ] Package manager support (Linux: Snap)
