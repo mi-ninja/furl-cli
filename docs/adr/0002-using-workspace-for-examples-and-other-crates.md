@@ -53,12 +53,13 @@ Each non-trivial example lives in its own subdirectory under
 a dependency (typically with `default-features = false` to
 demonstrate the lean embedding use-case).
 
-```
-examples/
-  headless-download/
-    Cargo.toml
-    src/
-      main.rs
+```text
+examples
+└── embedded-minimal
+    ├── Cargo.toml
+    └── src
+        └── main.rs
+
 ```
 
 Simple, self-contained snippets that require no extra dependencies

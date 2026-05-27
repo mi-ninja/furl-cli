@@ -122,6 +122,21 @@ async fn main(){
 }
 ```
 
+For a runnable workspace example that embeds `furl-cli` as a library,
+check [examples/embedded-minimal](examples/embedded-minimal).
+
+## 🏗 Architecture Decisions
+
+Project design decisions are documented as Architecture Decision Records
+(ADRs) under [docs/adr](docs/adr). The ADR index is available at
+[docs/adr/README.md](docs/adr/README.md).
+
+## 📦 Examples
+
+Implementation-oriented examples live in the [examples](examples)
+directory. These are standalone workspace crates that show how to use
+`furl-cli` as a library in real applications.
+
 ## 🗺 Roadmap
 
 - [x] Multithreaded chunk downloading
@@ -134,6 +149,7 @@ async fn main(){
 - [ ] Package manager support (Linux: Flatpak)
 - [ ] Package manager support (Linux: Snap)
 - [ ] Package manager support (macOS: Homebrew)
+- [ ] Examples
 - [ ] Resume interrupted downloads (Checkpoints)
 - [ ] Support for Proxy and Basic Auth
 - [ ] Config file support (furl.toml)
