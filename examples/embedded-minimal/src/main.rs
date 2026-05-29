@@ -4,7 +4,7 @@ use furl_core::{Downloader, GraphicalProgressReporter};
 async fn main() {
     let url = "https://raw.githubusercontent.com/ghimiresdp/furl-cli/refs/heads/main/res/images/example.png";
     let mut downloader = Downloader::new(url).with_reporter(GraphicalProgressReporter::new());
-    if let Ok(_) = downloader.download(".", None, Some(4)).await {
+    if downloader.download(".", None, Some(4)).await.is_ok() {
         println!("Download completed successfully!");
     } else {
         println!("Download failed.");
