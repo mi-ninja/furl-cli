@@ -14,16 +14,36 @@
 //! or check [tokio](https://crates.io/crates/tokio) package for more detailed implementation.
 //!
 //! ```rust
-//! use furl_core::Downloader;
+//! use furl_core::{Downloader};
 //!
 //! #[tokio::main]
-//! async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-//!     let mut downloader = Downloader::new("https://example.com/files/file_1.txt");
-//!     // download into the current directory using default thread count and custom filename
-//!     downloader.download(".", Some("file_123.txt".to_string()), None).await?;
-//!     Ok(())
+//! async fn main() {
+//!     let url = "https://raw.githubusercontent.com/ghimiresdp/furl-cli/refs/heads/main/res/images/example.png";
+//!     let mut downloader = Downloader::new(url);
+//!     if let Ok(_) = downloader.download(".", None, Some(4)).await {
+//!         println!("Download completed successfully!");
+//!     } else {
+//!         println!("Download failed.");
+//!     }
 //! }
 //! ```
+//!
+//! If you want to use the progress reporter, you can use the `GraphicalProgressReporter` from the `progress` feature.
+//! for that you need to enable the `progress` feature in your `Cargo.toml`.
+//!
+//! ```toml
+//! [dependencies]
+//! furl-core = { version = "0.8.0", features = ["progress"] }
+//!
+//! ```
 pub mod engine;
+pub mod features;
 
-pub use engine::Downloader;
+pub use engine::{Downloader, ProgressReporter};
+
+// re-exporting features for easier access
+#[cfg(feature = "progress")]
+pub use features::progress::GraphicalProgressReporter;
+
+#[cfg(feature = "cli")]
+pub use features::cli::FurlCliArgs;
