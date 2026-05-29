@@ -31,11 +31,11 @@ impl GraphicalProgressReporter {
             bar.set_length(total_bytes);
             bar.set_style(
                 ProgressStyle::with_template(&format!(
-                    "[Chunk {:03}] {{bar:40.cyan/blue}} {{bytes}}/{{total_bytes}} ({{percent}}%)",
+                    "[Chunk {:03}] {{wide_bar:40.cyan/blue}} {{binary_bytes}}/{{binary_total_bytes}} ({{percent}}%)",
                     chunk_index + 1
                 ))
                 .unwrap()
-                .progress_chars("=>-"),
+                // .progress_chars("=>-"),
             );
         } else {
             // unknown size: spinner
