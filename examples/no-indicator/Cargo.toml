@@ -5,5 +5,5 @@ edition = "2024"
 publish = false
 
 [dependencies]
-furl-cli = { path = "../../crates/furl_cli" }
+furl-cli = { path = "../../crates/furl_cli", default-features = false }
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

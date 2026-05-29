@@ -52,6 +52,12 @@ impl GraphicalProgressReporter {
     }
 }
 
+impl Default for GraphicalProgressReporter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[cfg(feature = "progress")]
 impl ProgressReporter for GraphicalProgressReporter {
     fn on_start(&self, chunk_index: usize, total_bytes: u64) {
