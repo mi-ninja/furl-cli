@@ -14,6 +14,4 @@ resolver = "3"
 exclude = ["target/", "Cargo.lock", ".github/"]
 
 [workspace.dependencies]
-# furl-cli = { path = "crates/furl_cli" }
-furl-cli = { path = "crates/furl_cli" }
 tokio = { version = "1.52.3", features = ["rt-multi-thread", "macros"] }
