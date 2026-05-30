@@ -265,24 +265,18 @@ impl Downloader {
             file.lock().await.set_len(file_size).await?;
 
             let mut start = 0;
-            let thread_size = file_size / threads;
-            let mut byte_size = thread_size;
-
-            //ignore threads if the file is less than a MB.
-            if file_size < _1MB {
+            // Determine chunk size: default to per-thread slice, cap at 10 MB for memory,
+            // or use full file if smaller than 1 MB (no threading benefit).
+            let chunk_size = if file_size < _1MB {
                 println!("ℹ️ The file is smaller than 1 MB, so skipping threads.");
-                byte_size = file_size;
-            }
-
-            // if the byte size is larger than 10 MB, split into 10 MB chunks
-            // so that memory consumption is less.
-            if thread_size > _10MB {
-                byte_size = _10MB
-            }
+                file_size
+            } else {
+                (file_size / threads).min(_10MB)
+            };
 
             // split chunks to download
             while start < file_size {
-                let end = min(start + byte_size, file_size);
+                let end = min(start + chunk_size, file_size);
                 self.chunks.lock().await.push(Chunk::new(start, end));
                 start = end + 1;
             }
