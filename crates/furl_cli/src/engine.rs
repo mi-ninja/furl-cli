@@ -55,6 +55,29 @@ impl Chunk {
     }
 }
 
+#[derive(Clone)]
+pub struct DownloadConfig {
+    pub max_chunk_size: u64,
+}
+
+impl DownloadConfig {
+    pub fn new() -> Self {
+        Self {
+            max_chunk_size: _10MB,
+        }
+    }
+    pub fn set_max_chunk_size(mut self, size: u64) -> Self {
+        self.max_chunk_size = size;
+        self
+    }
+}
+
+impl Default for DownloadConfig {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 pub struct Downloader {
     url: String,
     headers: HeaderMap,
@@ -62,6 +85,7 @@ pub struct Downloader {
     filename: Option<String>,
     chunks: Arc<Mutex<Vec<Chunk>>>, // this stores downloaded chunk size
     reporter: Arc<dyn ProgressReporter + Send + Sync>,
+    config: Arc<DownloadConfig>,
 }
 
 pub trait HeaderUtils {
@@ -141,7 +165,13 @@ impl Downloader {
             filename: None,
             chunks: Arc::new(Mutex::new(Vec::new())),
             reporter: Arc::new(NoopReporter),
+            config: Arc::new(DownloadConfig::default()),
         }
+    }
+
+    pub fn with_config(mut self, config: DownloadConfig) -> Self {
+        self.config = Arc::new(config);
+        self
     }
 
     pub fn with_reporter<R: ProgressReporter + Send + Sync + 'static>(
@@ -265,24 +295,18 @@ impl Downloader {
             file.lock().await.set_len(file_size).await?;
 
             let mut start = 0;
-            let thread_size = file_size / threads;
-            let mut byte_size = thread_size;
-
-            //ignore threads if the file is less than a MB.
-            if file_size < _1MB {
+            // Determine chunk size: default to per-thread slice, cap at 10 MB for memory,
+            // or use full file if smaller than 1 MB (no threading benefit).
+            let chunk_size = if file_size < _1MB {
                 println!("ℹ️ The file is smaller than 1 MB, so skipping threads.");
-                byte_size = file_size;
-            }
-
-            // if the byte size is larger than 10 MB, split into 10 MB chunks
-            // so that memory consumption is less.
-            if thread_size > _10MB {
-                byte_size = _10MB
-            }
+                file_size
+            } else {
+                (file_size / threads).min(self.config.max_chunk_size)
+            };
 
             // split chunks to download
             while start < file_size {
-                let end = min(start + byte_size, file_size);
+                let end = min(start + chunk_size, file_size);
                 self.chunks.lock().await.push(Chunk::new(start, end));
                 start = end + 1;
             }
@@ -308,6 +332,7 @@ impl Downloader {
                 let url = self.url.clone();
                 let index_clone = Arc::clone(&index);
                 let reporter_clone = Arc::clone(&self.reporter);
+                let config = Arc::clone(&self.config);
 
                 let task = tokio::spawn(async move {
                     let mut worker_total: u64 = 0;
@@ -332,6 +357,7 @@ impl Downloader {
                             filename: None,
                             chunks: Arc::clone(&chunks),
                             reporter: Arc::clone(&reporter_clone),
+                            config: Arc::clone(&config),
                         };
 
                         // Download the chunk and accumulate the bytes downloaded by this worker
@@ -439,5 +465,16 @@ mod tests {
             assert_eq!(downloader.filename.as_deref(), Some("tmp_download.bin"));
             assert_eq!(downloader.file_size, Some(0));
         });
+    }
+    #[test]
+    fn test_custom_download_config() {
+        let config = DownloadConfig::new().set_max_chunk_size(5 * 1024 * 1024);
+        assert_eq!(config.max_chunk_size, 5 * 1024 * 1024);
+    }
+
+    #[test]
+    fn test_default_download_config() {
+        let config = DownloadConfig::new();
+        assert_eq!(config.max_chunk_size, 10 * 1024 * 1024);
     }
 }
