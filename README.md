@@ -110,21 +110,26 @@ In library mode, you can just import the `Downloader` struct and use its
 `download()` method to download files.
 
 ```rust
-use furl_core::Downloader;
+use furl_core::{DownloadConfig, Downloader};
 
 // since Downloader::download() method is async, it needs to be implemented
 // inside the async function. if it is main function, we can use
 // `#[tokio::main]` macro.
-
 #[tokio::main]
-async fn main(){
-    let download_url = "https://raw.githubusercontent.com/ghimiresdp/furl-cli/refs/heads/main/res/images/example.png";
-    let mut downloader = Downloader::new(download_url);
-    if let Ok(_) = downloader.download("/home/user/Downloads", Some(4)).await {
-        println!("Download Complete!")
+async fn main() {
+    let url = "https://raw.githubusercontent.com/ghimiresdp/furl-cli/refs/heads/main/res/images/example.png";
+
+    let config = DownloadConfig::default().set_max_chunk_size(5 * 1024 * 1024); // 5 MB
+
+    let mut downloader = Downloader::new(url).with_config(config);
+
+    if downloader.download(".", None, Some(4)).await.is_ok() {
+        println!("Download completed successfully!");
+    } else {
+        println!("Download failed.");
     }
-    return;
 }
+
 ```
 
 For runnable workspace examples that embed `furl-cli` as a library,

@@ -39,7 +39,7 @@
 pub mod engine;
 pub mod features;
 
-pub use engine::{Downloader, ProgressReporter};
+pub use engine::{DownloadConfig, Downloader, ProgressReporter};
 
 // re-exporting features for easier access
 #[cfg(feature = "progress")]
