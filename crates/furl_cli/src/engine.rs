@@ -55,6 +55,29 @@ impl Chunk {
     }
 }
 
+#[derive(Clone)]
+pub struct DownloadConfig {
+    pub max_chunk_size: u64,
+}
+
+impl DownloadConfig {
+    pub fn new() -> Self {
+        Self {
+            max_chunk_size: _10MB,
+        }
+    }
+    pub fn set_max_chunk_size(mut self, size: u64) -> Self {
+        self.max_chunk_size = size;
+        self
+    }
+}
+
+impl Default for DownloadConfig {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 pub struct Downloader {
     url: String,
     headers: HeaderMap,
@@ -62,6 +85,7 @@ pub struct Downloader {
     filename: Option<String>,
     chunks: Arc<Mutex<Vec<Chunk>>>, // this stores downloaded chunk size
     reporter: Arc<dyn ProgressReporter + Send + Sync>,
+    config: Arc<DownloadConfig>,
 }
 
 pub trait HeaderUtils {
@@ -141,7 +165,13 @@ impl Downloader {
             filename: None,
             chunks: Arc::new(Mutex::new(Vec::new())),
             reporter: Arc::new(NoopReporter),
+            config: Arc::new(DownloadConfig::default()),
         }
+    }
+
+    pub fn with_config(mut self, config: DownloadConfig) -> Self {
+        self.config = Arc::new(config);
+        self
     }
 
     pub fn with_reporter<R: ProgressReporter + Send + Sync + 'static>(
@@ -271,7 +301,7 @@ impl Downloader {
                 println!("ℹ️ The file is smaller than 1 MB, so skipping threads.");
                 file_size
             } else {
-                (file_size / threads).min(_10MB)
+                (file_size / threads).min(self.config.max_chunk_size)
             };
 
             // split chunks to download
@@ -302,6 +332,7 @@ impl Downloader {
                 let url = self.url.clone();
                 let index_clone = Arc::clone(&index);
                 let reporter_clone = Arc::clone(&self.reporter);
+                let config = Arc::clone(&self.config);
 
                 let task = tokio::spawn(async move {
                     let mut worker_total: u64 = 0;
@@ -326,6 +357,7 @@ impl Downloader {
                             filename: None,
                             chunks: Arc::clone(&chunks),
                             reporter: Arc::clone(&reporter_clone),
+                            config: Arc::clone(&config),
                         };
 
                         // Download the chunk and accumulate the bytes downloaded by this worker
