@@ -9,6 +9,11 @@ furl is a high-performance command-line tool designed to download files faster
 by utilizing multiple threads to fetch chunks of data concurrently. Inspired by
 the simplicity of cURL and the robustness of wget.
 
+> [!Warning]
+> This branch is usually ahead of the latest release. If something does not
+> work as expected, consider checking out a specific release tag, or install
+> a stable version via cargo or winget. For more, see the [Installation](#installation) section.
+
 ![Example image](res/images/example.png)
 
 ## ✨ Features
@@ -122,6 +127,21 @@ async fn main(){
 }
 ```
 
+For runnable workspace examples that embed `furl-cli` as a library,
+check the [examples/](examples) directory (e.g. [embedded-minimal](examples/embedded-minimal), [no-indicator](examples/no-indicator)).
+
+## 🏗 Architecture Decisions
+
+Project design decisions are documented as Architecture Decision Records
+(ADRs) under [docs/adr](docs/adr). The ADR index is available at
+[docs/adr/README.md](docs/adr/README.md).
+
+## 📦 Examples
+
+Implementation-oriented examples live in the [examples](examples)
+directory. These are standalone workspace crates that show how to use
+`furl-cli` as a library in real applications.
+
 ## 🗺 Roadmap
 
 - [x] Multithreaded chunk downloading
@@ -130,13 +150,14 @@ async fn main(){
 - [x] Real-time progress bars
 - [x] Smart Threading (Completely ignore threading for files smaller than 1 MB).
 - [x] Package manager support (Windows: WinGet)
+- [x] Examples
+- [ ] Config file support (furl.toml)
+- [ ] Support for Proxy and Basic Auth
+- [ ] Resume interrupted downloads (Checkpoints)
 - [ ] Package manager support (Linux: APT)
 - [ ] Package manager support (Linux: Flatpak)
 - [ ] Package manager support (Linux: Snap)
 - [ ] Package manager support (macOS: Homebrew)
-- [ ] Resume interrupted downloads (Checkpoints)
-- [ ] Support for Proxy and Basic Auth
-- [ ] Config file support (furl.toml)
 
 ## 🤝 Contributing
 
