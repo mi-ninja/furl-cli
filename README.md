@@ -108,9 +108,14 @@ furl https://raw.githubusercontent.com/ghimiresdp/furl-cli/refs/heads/main/res/i
 
 Add the latest version of `furl-cli` without default features to your `Cargo.toml`
 
+#### Example
+
 ```toml
 [dependencies]
 furl-cli = { version = "0.8.1", default-features = false }
+
+# example async library for async operations
+tokio = { version = "1.52.3", features = ["rt-multi-thread", "macros"] }
 ```
 
 or install through `cargo add` command:
@@ -124,6 +129,9 @@ If you want to use graphical indicators, you can enable the `progress` feature.
 ```toml
 [dependencies]
 furl-cli = { version = "0.8.1", default-features = false, features = ["progress"] }
+
+# example async library for async operations
+tokio = { version = "1.52.3", features = ["rt-multi-thread", "macros"] }
 ```
 
 or install through `cargo add` command:

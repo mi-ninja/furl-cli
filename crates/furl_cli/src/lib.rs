@@ -20,6 +20,9 @@
 //! ```toml
 //! [dependencies]
 //! furl-cli = { version = "0.8.1", default-features = false }
+//!
+//! # example async library for async operations
+//! tokio = { version = "1.52.3", features = ["rt-multi-thread", "macros"] }
 //! ```
 //!
 //! ## Example Usecase
