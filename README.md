@@ -106,6 +106,32 @@ furl https://raw.githubusercontent.com/ghimiresdp/furl-cli/refs/heads/main/res/i
 
 ### Library Mode
 
+Add the latest version of `furl-cli` without default features to your `Cargo.toml`
+
+```toml
+[dependencies]
+furl-cli = { version = "0.8.1", default-features = false }
+```
+
+or install through `cargo add` command:
+
+```bash
+cargo add furl-cli --no-default-features
+```
+
+If you want to use graphical indicators, you can enable the `progress` feature.
+
+```toml
+[dependencies]
+furl-cli = { version = "0.8.1", default-features = false, features = ["progress"] }
+```
+
+or install through `cargo add` command:
+
+```bash
+cargo add furl-cli --no-default-features --features progress
+```
+
 In library mode, you can just import the `Downloader` struct and use its
 `download()` method to download files.
 
